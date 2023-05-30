@@ -1,0 +1,6 @@
+streamlit
+gpt_index
+langchain
+gradio
+openai
+atlassian-python-api
