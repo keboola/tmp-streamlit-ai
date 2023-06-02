@@ -4,3 +4,8 @@ langchain
 gradio
 openai
 atlassian-python-api
+asyncio
+duckduckgo_search
+bs4
+playwright
+faiss-cpu
