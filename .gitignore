@@ -4,3 +4,7 @@ src/__pycache__/agent.cpython-311.pyc
 src/tools/__pycache__/process_csv.cpython-311.pyc
 src/tools/__pycache__/query_website.cpython-311.pyc
 src/tools/confluence_search/__pycache__/confluence_search.cpython-311.pyc
+tmp-streamlit-ai/src/tools/confluence_search/data
+tmp-streamlit-ai/src/tools/confluence_search/notebook_testing
+src/tools/confluence_search/data
+src/tools/confluence_search/notebook_testing

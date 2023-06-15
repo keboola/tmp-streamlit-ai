@@ -11,3 +11,5 @@ bs4
 playwright
 faiss-cpu
 streamlit_chat
+pinecone-client
+tiktoken
