@@ -1,45 +1,9 @@
 import streamlit as st
 import os
 from streamlit_chat import message
-from pydantic import Field
-
-#Langchain Imports
-from langchain.chat_models import ChatOpenAI
-from langchain.agents import Tool, initialize_agent
-from langchain.chains.conversation.memory import ConversationBufferMemory
-from langchain.experimental.autonomous_agents.autogpt.agent import AutoGPT
-from langchain.docstore.document import Document
-from langchain.tools.file_management.read import ReadFileTool
-from langchain.tools.file_management.write import WriteFileTool
-from langchain.tools import BaseTool, DuckDuckGoSearchRun
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.chains.qa_with_sources.loading import load_qa_with_sources_chain, BaseCombineDocumentsChain
-
-#Memory Imports 
-import faiss
-from langchain.vectorstores import FAISS
-from langchain.docstore import InMemoryDocstore
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.tools.human.tool import HumanInputRun
-
-# Llama Index Imports
-from llama_index import SimpleDirectoryReader, GPTListIndex, GPTVectorStoreIndex, LLMPredictor, PromptHelper
-from llama_index.langchain_helpers.agents import IndexToolConfig, LlamaIndexTool
-from llama_index.langchain_helpers.agents import create_llama_chat_agent
-
-# src Imports
-from src.tools.confluence_search.confluence_search import conflu_search
-from src.tools.process_csv import process_csv
-from src.tools.query_website import WebpageQATool
 from src.agent import agent
 
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
-os.environ["STORAGE_API_URL"] = st.secrets["STORAGE_API_URL"]
-os.environ["STORAGE_API_TOKEN"] = st.secrets["STORAGE_API_TOKEN"]
-
-
-llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.0)
-ROOT_DIR = "./data/"
 
 def main():
     st.title("Keboola Conflu AI Chatbot")
