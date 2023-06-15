@@ -1,5 +1,6 @@
 streamlit
 gpt_index
+llama-index
 langchain
 gradio
 openai
@@ -9,3 +10,4 @@ duckduckgo_search
 bs4
 playwright
 faiss-cpu
+streamlit_chat

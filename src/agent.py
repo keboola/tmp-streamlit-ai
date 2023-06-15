@@ -1,7 +1,5 @@
 import streamlit as st
-import os
-from streamlit_chat import message
-from pydantic import Field
+
 
 #Langchain Imports
 from langchain.chat_models import ChatOpenAI
@@ -31,42 +29,47 @@ from llama_index.langchain_helpers.agents import create_llama_chat_agent
 from src.tools.confluence_search.confluence_search import conflu_search
 from src.tools.process_csv import process_csv
 from src.tools.query_website import WebpageQATool
-from src.agent import agent
-
-os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
-os.environ["STORAGE_API_URL"] = st.secrets["STORAGE_API_URL"]
-os.environ["STORAGE_API_TOKEN"] = st.secrets["STORAGE_API_TOKEN"]
-
 
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.0)
-ROOT_DIR = "./data/"
+query_website_tool = WebpageQATool(qa_chain=load_qa_with_sources_chain(llm))
 
-def main():
-    st.title("Keboola Conflu AI Chatbot")
-    if "generated" not in st.session_state:
-        st.session_state["generated"] = []
+# Memory
+embeddings_model = OpenAIEmbeddings()
+embedding_size = 1536
+index = faiss.IndexFlatL2(embedding_size)
+vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {})
 
-    if "past" not in st.session_state:
-        st.session_state["past"] = []
-
-
-    def get_text():
-        input_text = st.text_input("You: ", "Answer the following question: What is the process for a customer to set up BYODB? Provide all relevant citations to confluence docs", key="input")
-        return input_text
+# !pip install duckduckgo_search
+web_search = DuckDuckGoSearchRun()
 
 
-    user_input = get_text()
-
-    if user_input:
-        output = agent(user_input)
-        st.session_state.past.append(user_input)
-        st.session_state.generated.append(output)
-
-    if st.session_state["generated"]:
-
-        for i in range(len(st.session_state["generated"]) - 1, -1, -1):
-            message(st.session_state["generated"][i], key=str(i))
-            message(st.session_state["past"][i], is_user=True, key=str(i) + "_user")
-
-if __name__ == "__main__":
-    main()
+def agent(input_text):
+    tools = [
+        web_search,
+        WriteFileTool(root_dir="./data"),
+        ReadFileTool(root_dir="./data"),
+        process_csv,
+        query_website_tool,
+        Tool(
+            name = "Conflu Index",
+            func=lambda q: str(conflu_search.construct_index(input_text).as_query_engine().query(q)),
+            description="useful for when you want to answer questions about the internal docs from Confluence. The input to this tool should be a complete english sentence.",
+            return_direct=True
+    )
+    # HumanInputRun(), # Activate if you want the permit asking for help from the human
+]
+    agent = AutoGPT.from_llm_and_tools(
+    ai_name="Tom",
+    ai_role="Assistant",
+    tools=tools,
+    llm=llm,
+    memory=vectorstore.as_retriever(search_kwargs={"k": 8}),
+    #human_in_the_loop=True, # Set to True if you want to add feedback at each step.
+    )
+    #agent.chain.verbose = True
+    
+    
+    response = agent.run([input_text])
+    st.progress(1.0)
+    st.balloons()
+    return response
