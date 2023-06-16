@@ -6,6 +6,9 @@ from src.tools.confluence_search.confluence_search import conflu_search
 
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
+os.mkdir("./data")
+os.mkdir("data")
+
 def main():
     st.title("Keboola Conflu AI Chatbot")
     if "generated" not in st.session_state:
