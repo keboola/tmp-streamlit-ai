@@ -5,12 +5,6 @@ from langchain.llms import OpenAI
 from langchain.prompts import Prompt
 import streamlit as st
 import os
-confluence = Confluence(
-    url='http://keboola.atlassian.net/wiki',
-    username='jordan.burger@keboola.com',
-    password='X61PZts1iiifiYUU4GmW0A29'
-    )
-os.environ["OPENAI_API_KEY"] = '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'
 
 pre_prompt = """
 You are being given a question that is meant to be answered by searching the 

@@ -13,3 +13,4 @@ faiss-cpu
 streamlit_chat
 pinecone-client
 tiktoken
+streamlit-authenticator==0.2.1
