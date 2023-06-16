@@ -6,6 +6,14 @@ from langchain.prompts import Prompt
 import streamlit as st
 import os
 
+confluence = Confluence(
+    url=st.secrets["CONFLUENCE_URL"],
+    username=st.secrets["CONFLUENCE_USERNAME"],
+    password=st.secrets["CONFLUENCE_PASSWORD"]
+    )
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+
+
 pre_prompt = """
 You are being given a question that is meant to be answered by searching the 
 Keboola Confluence docs. The only way to answer this question is to search the docs. 
