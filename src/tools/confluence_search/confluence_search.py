@@ -5,21 +5,12 @@ from langchain.llms import OpenAI
 from langchain.prompts import Prompt
 import streamlit as st
 import os
-
-max_input_size = 4096
-num_outputs = 512
-max_chunk_overlap = 0.1
-chunk_size_limit = 600
-
 confluence = Confluence(
- url=st.secrets["CONFLUENCE_URL"],
- username=st.secrets["CONFLUENCE_USERNAME"],
- password=st.secrets["CONFLUENCE_PASSWORD"])
-
-
-os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
-
-directory = "data"
+    url='http://keboola.atlassian.net/wiki',
+    username='jordan.burger@keboola.com',
+    password='X61PZts1iiifiYUU4GmW0A29'
+    )
+os.environ["OPENAI_API_KEY"] = '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'
 
 pre_prompt = """
 You are being given a question that is meant to be answered by searching the 
@@ -46,16 +37,14 @@ Your task is to take the input question and generate a CQL query that will retur
 """
 
 def generate_cql_query_keywords(input_text):
-  
     # create a more advanced function to generate a CQL query. 
     # It should utlize an LLM to extract keywords from the input 
     # text and then use those to power the query
-    llm = OpenAI()
-    cql_query = llm.predict(pre_prompt + input_text)
-    return f"text ~ '{cql_query}'"
+        llm = OpenAI()
+        cql_query = llm.predict(pre_prompt + input_text)
+        return f"text ~ '{cql_query}'"
 
 
-#TODO: [AIS-76] Fix this error - System: Command Conflu Index returned: None Fi
 def conflu_search(input_text: str) -> GPTVectorStoreIndex:
     st.write('Generating CQL query...')
     st.progress(0.1)
@@ -95,10 +84,10 @@ def conflu_search(input_text: str) -> GPTVectorStoreIndex:
         # convert documents to a string
     documents = SimpleDirectoryReader('data').load_data()
     index = GPTVectorStoreIndex.from_documents(documents)
-
+    st.write('Index created!')
     
+
     return index
 
-    
 if __name__ == "__main__":
     conflu_search()

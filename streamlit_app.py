@@ -1,7 +1,8 @@
 import streamlit as st
 import os
 from streamlit_chat import message
-from src.agent import agent
+#from src.agent import agent
+from src.tools.confluence_search.confluence_search import conflu_search
 
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
@@ -22,15 +23,10 @@ def main():
     user_input = get_text()
 
     if user_input:
-        output = agent(user_input)
-        st.session_state.past.append(user_input)
-        st.session_state.generated.append(output)
-
-    if st.session_state["generated"]:
-
-        for i in range(len(st.session_state["generated"]) - 1, -1, -1):
-            message(st.session_state["generated"][i], key=str(i))
-            message(st.session_state["past"][i], is_user=True, key=str(i) + "_user")
-
+        with st.spinner("Executing Query & Generating response..."):
+            output = conflu_search(user_input).as_query_engine().query(user_input)
+        st.success("Done!")
+        st.balloons()
+        st.write(output)
 if __name__ == "__main__":
     main()
