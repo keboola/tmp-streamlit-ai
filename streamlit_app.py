@@ -31,6 +31,6 @@ def main():
             output = conflu_search(user_input).as_query_engine().query(user_input)
         st.success("Done!")
         st.balloons()
-        st.write(output)
+        st.write(output.response)
 if __name__ == "__main__":
     main()
