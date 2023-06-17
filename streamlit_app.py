@@ -20,7 +20,7 @@ def main():
 
 
     def get_text():
-        input_text = st.text_input("You: ", "Answer the following question: What is the process for a customer to set up BYODB? Provide all relevant citations to confluence docs", key="input")
+        input_text = st.text_input("You: ", "What is the process for a customer to set up BYODB?", key="input")
         return input_text
 
 
