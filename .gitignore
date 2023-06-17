@@ -8,3 +8,6 @@ tmp-streamlit-ai/src/tools/confluence_search/data
 tmp-streamlit-ai/src/tools/confluence_search/notebook_testing
 src/tools/confluence_search/data
 src/tools/confluence_search/notebook_testing
+src/tools/zendesk_search/zendeskSearchTesting.ipynb
+src/tools/zendesk_search/data
+src/tools/zendesk_search/.streamlit
